@@ -1,14 +1,41 @@
-Vagrant.configure("2") do |config|
-  # Máquina Ubuntu
+Vagrant.configure(2) do |config|
+  config.vm.define "maquina_windows" do |maquina_windows|
+    maquina_windows.vm.box = "gusztavvargadr/windows-10"
+    maquina_windows.vm.network "private_network", ip: "10.0.0.10"
+    maquina_windows.vm.provider "virtualbox" do |vb|
+        vb.name = "windows_vinicius_arjonas"
+        vb.memory = "1024"
+        vb.cpus = 1
+    end
+  end
   config.vm.define "maquina_ubuntu" do |maquina_ubuntu|
     maquina_ubuntu.vm.box = "ubuntu/focal64"
-    maquina_ubuntu.vm.network "private_network", ip: "10.0.0.30"
+    maquina_ubuntu.vm.network "private_network", ip: "10.0.0.20"
     maquina_ubuntu.vm.provider "virtualbox" do |vb|
+        vb.name = "ubuntu_vinicius_arjonas"
         vb.memory = "512"
         vb.cpus = 1
     end
     maquina_ubuntu.vm.provision "shell", inline: <<-SHELL
-      apt-get upgrade
+      echo "Atualizando pacotes..."
+      sudo apt-get update
+      echo "Fazendo o upgrade da distro ubuntu..."
+      sudo apt dist-upgrade -y
+      echo "Instalando o apache..."
+      sudo apt-get install apache2 -y
+      echo "Máquina Ubuntu"
+    SHELL
+  end
+  config.vm.define "maquina_centos" do |maquina_centos|
+    maquina_centos.vm.box = "centos/7"
+    maquina_centos.vm.network "private_network", ip: "10.0.0.30"
+    maquina_centos.vm.provider "virtualbox" do |vb|
+        vb.name = "centos_vinicius_arjonas"
+        vb.memory = "1024"
+        vb.cpus = 1
+    end
+    maquina_centos.vm.provision "shell", inline: <<-SHELL
+      echo "Máquina Centos 7..."
     SHELL
   end
 end
